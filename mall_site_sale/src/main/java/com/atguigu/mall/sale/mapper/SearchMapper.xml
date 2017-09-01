@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.mall.sale.mapper.SearchMapper">
+
+	<!-- 查询商品信息 -->
+	<select id="queryProductInfoByClass_2_id" resultMap="select_sku_by_class_2_map"
+		parameterType="int">
+		select sku.id as sku_id,spu.id as spu_id,tm.id as tm_id
+		,sku.*,spu.*,tm.*
+		from
+		T_mall_product spu,
+		T_mall_sku sku,
+		T_mall_sku_attr_value av,
+		T_mall_trade_mark tm,
+		T_mall_tm_class tmc
+
+		where spu.Id =sku.shp_id AND
+		sku.Id = av.sku_id AND
+		spu.flbh1 =
+		tmc.flbh1 AND
+		tmc.pp_id = tm.Id and
+		spu.pp_id = tm.id
+		and spu.flbh2 =
+		#{class_2_id}
+	</select>
+	<!-- 根据spuId查询sku信息 -->
+	<select id="queryProductDetails" parameterType="int"
+		resultType="com.atguigu.mall.sale.beans.MallSku">
+		select * from t_mall_sku where shp_id = #{spuId}
+	</select>
+	<!-- 根据shuId查询商品详细信息 -->
+	<select id="querySkuDetailsBySkuId" parameterType="int"
+		resultMap="select_sku_detail_by_id_map">
+		select sku.id as sku_id,spu.id as spu_id,tm.id as
+		tm_id,img.id as img_id,attr.shxm_mch ,CONCAT(val.shxzh,val.shxzh_mch)
+		as shxzh_mch
+		,sku.*,spu.*,img.*
+		from
+		t_mall_sku sku,
+		t_mall_product spu,
+		t_mall_trade_mark tm,
+		t_mall_sku_attr_value av,
+		t_mall_attr attr,
+		t_mall_value val,
+		t_mall_product_image img
+		where
+		sku.shp_id = spu.Id
+		AND
+		tm.id = spu.pp_id
+		AND
+		sku.Id = av.sku_id
+		and
+		av.shxm_id = attr.id
+		and
+		av.shxzh_id = val.id
+		and
+		spu.id = img.shp_id
+		and
+		sku.id = #{skuId}
+	</select>
+
+	<resultMap type="com.atguigu.mall.sale.beans.DetailMallSku" id="select_sku_detail_by_id_map"
+		autoMapping="true">
+		<result column="sku_id" property="id" />
+		<association javaType="com.atguigu.mall.sale.beans.MallProduct"
+			property="spu" autoMapping="true">
+			<result column="spu_id" property="id" />
+		</association>
+		<association javaType="com.atguigu.mall.sale.beans.MallTradeMark"
+			property="tm" autoMapping="true">
+			<result column="tm_id" property="id" />
+		</association>
+		<collection property="list_image"
+			ofType="com.atguigu.mall.sale.beans.MallProductImage" autoMapping="true">
+			<result column="img_id" property="id" />
+		</collection>
+		<collection property="list_av_name" ofType="com.atguigu.mall.sale.beans.MallSkuAVName"
+			autoMapping="true">
+		</collection>
+	</resultMap>
+	
+	<resultMap type="com.atguigu.mall.sale.beans.ObjectMallSku" id="select_sku_by_class_2_map"
+		autoMapping="true">
+		<result column="sku_id" property="id" />
+		<association javaType="com.atguigu.mall.sale.beans.MallProduct"
+			property="spu" autoMapping="true">
+			<result column="spu_id" property="id" />
+		</association>
+		<association javaType="com.atguigu.mall.sale.beans.MallTradeMark"
+			property="tm" autoMapping="true">
+			<result column="tm_id" property="id" />
+		</association>
+	</resultMap>
+	<!-- 根据筛选的条件的检索商品 -->
+	<select id="queryProductByCondition" parameterType="Map" resultMap="select_sku_by_class_2_map">
+		select sku.id as sku_id,spu.id as spu_id,tm.id as tm_id
+		,sku.*,spu.*,tm.* from
+		T_mall_product spu,
+		T_mall_sku sku,
+		T_mall_sku_attr_value av,
+		T_mall_trade_mark tm,
+		T_mall_tm_class tmc
+
+		where spu.Id =sku.shp_id AND
+		sku.Id = av.sku_id AND
+		spu.flbh1 =	tmc.flbh1 
+		AND tmc.pp_id = tm.Id
+		and spu.pp_id = tm.id
+		and spu.flbh2 = #{class_2_id}
+		${sql}
+		${order}
+	</select> 
+</mapper>

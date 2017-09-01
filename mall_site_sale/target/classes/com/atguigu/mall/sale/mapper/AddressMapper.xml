@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.mall.sale.mapper.AddressMapper">
+	
+	<!-- 根据用户提交的地址id查询用户的收货地址 -->
+	<select id="queryAddressById" resultType="com.atguigu.mall.sale.beans.MallAddress">
+		select *from t_mall_address where id=#{id}
+	</select>
+	
+</mapper>

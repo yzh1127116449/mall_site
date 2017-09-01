@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.mall.sale.mapper.CartMapper">
+	<!-- 保存购物车信息 -->
+	<insert id="saveCartInfo">
+		insert into t_mall_shoppingcar (sku_mch,sku_jg,tjshl,hj,yh_id,shp_id,sku_id,shp_tp,shfxz,kcdz)
+		values(#{skuMch},#{skuJg},#{tjshl},#{hj},#{yhId},#{shpId},#{skuId},#{shpTp},#{shfxz},#{kcdz})
+	</insert>
+	<!-- 查询购物车中的商品 -->
+	<select id="queryProductFromCart" resultType="com.atguigu.mall.sale.beans.MallShoppingCar">
+		select *from t_mall_shoppingcar 
+	</select>
+		<!-- 更新购物车数据 -->
+	<update id="updateCartInfo">
+		update t_mall_shoppingcar 
+		<set>
+			<if test="tjshl!=0">
+				tjshl=#{cart.tjshl},
+			</if>
+			<if test="hj!=0">
+				hj=#{cart.hj},
+			</if>
+		</set>
+		 where sku_id = #{cart.skuId} and yh_id=#{userId}
+	</update>
+	<!-- 根据用户id查询购物车信息 -->
+	<select id="queryCartByUserId" resultType="com.atguigu.mall.sale.beans.MallShoppingCar">
+		select *from t_mall_shoppingcar where yh_id = #{id}
+	</select>
+</mapper>
