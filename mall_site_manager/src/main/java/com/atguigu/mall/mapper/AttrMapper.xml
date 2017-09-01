@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.mall.mapper.AttrMapper">
+	
+	<!-- 根据二级分类id查询属性 -->
+	<select id="queryAttrByClass_2_id" resultMap="queryAttr">
+		select a.id attr_id,a.shxm_mch,a.shfqy,a.flbh2,b.id val_id,b.shxzh,b.shxm_id,b.shxzh_mch,a.*,b.*
+		from t_mall_attr a ,t_mall_value b 
+		where a.id=b.shxm_id and a.flbh2=#{id}
+	</select>
+	
+	<resultMap type="com.atguigu.mall.beans.ObjectMallAttr" id="queryAttr" autoMapping="true">
+		<result column="attr_id" property="id"/>
+		<result column="shxm_mch" property="shxmMch"/>
+		<result column="shfqy" property="shfqy"/>
+		<result column="flbh2" property="flbh2"/>
+		<collection property="list_value" ofType="com.atguigu.mall.beans.MallValue" autoMapping="true">
+			<result column="val_id" property="id"/>
+			<result column="shxzh" property="shxzh"/>
+			<result column="shxm_id" property="shxmId"/>
+			<result column="shxzh_mch" property="shxzhMch"/>
+		</collection>
+	</resultMap>
+	<!-- 保存属性 -->
+	<insert id="addAttr" parameterType="Map" useGeneratedKeys="true"  keyProperty="attr_obj.id" >
+		insert into t_mall_attr (shxm_mch,flbh2)values (#{attr_obj.shxmMch},#{class_2_id})
+	</insert>
+</mapper>

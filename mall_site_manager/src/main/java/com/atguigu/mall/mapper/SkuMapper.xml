@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.mall.mapper.SkuMapper">
+	<!-- 查询sku信息 -->
+	<select id="querySku" parameterType="Map" resultType="com.atguigu.mall.beans.MallProduct">
+		select p.id,p.shp_mch shpMch,p.shp_tp shpTp,p.flbh1,p.flbh2,p.pp_id ppId,p.chjshj,p.shp_msh shpMsh
+		from t_mall_product p where pp_id=#{pp_id} and flbh1=#{class_1_id} and flbh2=#{class_2_id}
+	</select>
+	<!-- 保存sku信息 -->
+	<insert id="save_sku_attr" useGeneratedKeys="true" keyColumn="id" keyProperty="sku.id">
+		insert into t_mall_sku (shp_id,kc,jg,sku_mch,kcdz)
+		value(#{spu.spuId},#{sku.kc},#{sku.jg},#{sku.skuMch},#{sku.kcdz})
+	</insert>
+	
+		<!-- 保存sku信息 -->
+	<insert id="save_sku_attr_val">
+		insert into t_mall_sku_attr_value (shxm_id,shxzh_id,shp_id,sku_id)values
+		<foreach collection="list_attr_val" item="sku_attr_val" separator=",">
+			(#{sku_attr_val.shxmId},
+			 #{sku_attr_val.shxzhId},
+			 #{spu_id},
+			 #{sku_id}
+			)	
+		</foreach>
+	</insert>
+</mapper>
